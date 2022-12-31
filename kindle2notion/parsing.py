@@ -158,7 +158,13 @@ def _add_parsed_items_to_all_books_dict(
 ) -> Dict:
     if title not in all_books:
         all_books[title] = {"author": author, "highlights": []}
-    all_books[title]["highlights"].append((highlight, page, location, date, is_note))
+    all_books[title]["highlights"].append({
+        'highlight': highlight,
+        'page': page,
+        'location': location,
+        'date': date,
+        'is_note': is_note
+    })
     return all_books
 
 

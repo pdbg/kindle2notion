@@ -21,58 +21,58 @@ def test_parse_raw_clippings_text_should_return_a_dict_with_all_the_parsed_infor
         "Title 1: A Great Book": {
             "author": "Ben Horowitz",
             "highlights": [
-                (
-                    "This is test highlight 1.",
-                    "11",
-                    "111-114",
-                    "Tuesday, 22 September 2020 09:23:48 AM",
-                    False,
-                ),
-                (
-                    "This is test highlight 2.",
-                    "11",
-                    "111-114",
-                    "Tuesday, 22 September 2020 09:24:04 AM",
-                    False,
-                ),
+                {
+                    "highlight": "This is test highlight 1.",
+                    "page": "11",
+                    "location": "111-114",
+                    "date": "Tuesday, 22 September 2020 09:23:48 AM",
+                    "is_note": False,
+                },
+                {
+                    "highlight": "This is test highlight 2.",
+                    "page": "11",
+                    "location": "111-114",
+                    "date": "Tuesday, 22 September 2020 09:24:04 AM",
+                    "is_note": False,
+                },
             ],
         },
         "Title 2 Is Good Too": {
             "author": "Colin Bryar",
             "highlights": [
-                (
-                    "This is test highlight 3.",
-                    "3",
-                    "184-185",
-                    "Friday, 30 April 2021 12:31:29 AM",
-                    False,
-                ),
-                (
-                    "This is test highlight 4.",
-                    "34",
-                    "682-684",
-                    "Friday, 30 April 2021 03:14:33 PM",
-                    False,
-                ),
+                {
+                    "highlight": "This is test highlight 3.",
+                    "page": "3",
+                    "location": "184-185",
+                    "date": "Friday, 30 April 2021 12:31:29 AM",
+                    "is_note": False,
+                },
+                {
+                    "highlight": "This is test highlight 4.",
+                    "page": "34",
+                    "location": "682-684",
+                    "date": "Friday, 30 April 2021 03:14:33 PM",
+                    "is_note": False,
+                },
             ],
         },
         "Title 3 Is Clean (Robert C. Martin Series)": {
             "author": "Martin Robert C.",
             "highlights": [
-                (
-                    "This is test highlight 5.",
-                    "22",
-                    "559-560",
-                    "Saturday, 15 May 2021 10:25:42 PM",
-                    False,
-                ),
-                (
-                    "This is test highlight 6.",
-                    "22",
-                    "564-565",
-                    "Saturday, 15 May 2021 10:26:26 PM",
-                    False,
-                ),
+                {
+                    "highlight": "This is test highlight 5.",
+                    "page": "22",
+                    "location": "559-560",
+                    "date": "Saturday, 15 May 2021 10:25:42 PM",
+                    "is_note": False,
+                },
+                {
+                    "highlight": "This is test highlight 6.",
+                    "page": "22",
+                    "location": "564-565",
+                    "date": "Saturday, 15 May 2021 10:26:26 PM",
+                    "is_note": False,
+                },
             ],
         },
     }
@@ -260,13 +260,13 @@ def test_add_parsed_items_to_books_dict_should_add_the_parsed_items_when_the_boo
         "Relativity": {
             "author": "Albert Einstein",
             "highlights": [
-                (
-                    "This is a first highlight.",
-                    "1",
-                    "100",
-                    datetime(2021, 4, 30, 0, 31, 29),
-                    False,
-                )
+                {
+                    "highlight": "This is a first highlight.",
+                    "page": "1",
+                    "location": "100",
+                    "date": datetime(2021, 4, 30, 0, 31, 29),
+                    "is_note": False,
+                }
             ],
         }
     }
@@ -286,13 +286,13 @@ def test_add_parsed_items_to_books_dict_should_add_the_parsed_items_when_the_boo
         "Relativity": {
             "author": "Albert Einstein",
             "highlights": [
-                (
-                    "This is a first highlight.",
-                    "1",
-                    "100",
-                    datetime(2021, 4, 30, 0, 31, 29),
-                    False,
-                )
+                {
+                    "highlight": "This is a first highlight.",
+                    "page": "1",
+                    "location": "100",
+                    "date": datetime(2021, 4, 30, 0, 31, 29),
+                    "is_note": False,
+                }
             ],
         }
     }
@@ -308,20 +308,20 @@ def test_add_parsed_items_to_books_dict_should_add_the_parsed_items_when_the_boo
         "Relativity": {
             "author": "Albert Einstein",
             "highlights": [
-                (
-                    "This is a first highlight.",
-                    "1",
-                    "100",
-                    datetime(2021, 4, 30, 0, 31, 29),
-                    False,
-                ),
-                (
-                    "This is a second highlight.",
-                    "2",
-                    "200",
-                    datetime(2021, 5, 1, 0, 31, 29),
-                    False,
-                ),
+                {
+                    "highlight": "This is a first highlight.",
+                    "page": "1",
+                    "location": "100",
+                    "date": datetime(2021, 4, 30, 0, 31, 29),
+                    "is_note": False,
+                },
+                {
+                    "highlight": "This is a second highlight.",
+                    "page": "2",
+                    "location": "200",
+                    "date": datetime(2021, 5, 1, 0, 31, 29),
+                    "is_note": False,
+                },
             ],
         }
     }
