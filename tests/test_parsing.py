@@ -25,14 +25,14 @@ def test_parse_raw_clippings_text_should_return_a_dict_with_all_the_parsed_infor
                     "This is test highlight 1.",
                     "11",
                     "111-114",
-                    "Tuesday, 22 September 2020 09:23:48 AM",
+                    datetime(2020, 9, 22, 9, 23, 48),
                     False,
                 ),
                 (
                     "This is test highlight 2.",
                     "11",
                     "111-114",
-                    "Tuesday, 22 September 2020 09:24:04 AM",
+                    datetime(2020, 9, 22, 9, 24, 4),
                     False,
                 ),
             ],
@@ -44,14 +44,14 @@ def test_parse_raw_clippings_text_should_return_a_dict_with_all_the_parsed_infor
                     "This is test highlight 3.",
                     "3",
                     "184-185",
-                    "Friday, 30 April 2021 12:31:29 AM",
+                    datetime(2021, 4, 30, 0, 31, 29),
                     False,
                 ),
                 (
                     "This is test highlight 4.",
                     "34",
                     "682-684",
-                    "Friday, 30 April 2021 03:14:33 PM",
+                    datetime(2021, 4, 30, 15, 14, 33),
                     False,
                 ),
             ],
@@ -63,14 +63,14 @@ def test_parse_raw_clippings_text_should_return_a_dict_with_all_the_parsed_infor
                     "This is test highlight 5.",
                     "22",
                     "559-560",
-                    "Saturday, 15 May 2021 10:25:42 PM",
+                    datetime(2021, 5, 15, 22, 25, 42),
                     False,
                 ),
                 (
                     "This is test highlight 6.",
                     "22",
                     "564-565",
-                    "Saturday, 15 May 2021 10:26:26 PM",
+                    datetime(2021, 5, 15, 22, 26, 26),
                     False,
                 ),
             ],
@@ -183,7 +183,7 @@ def test_parse_page_location_date_and_note_should_parse_the_page_location_and_da
         "This is a test highlight.",
         False,
     ]
-    expected = ("3", "184-185", "Friday, 30 April 2021 12:31:29 AM", False)
+    expected = ("3", "184-185", datetime(2021, 4, 30, 0, 31, 29), False)
 
     # When
     actual = _parse_page_location_date_and_note(raw_clipping_list)
@@ -219,7 +219,7 @@ def test_parse_page_location_date_and_note_should_parse_the_location_and_date_wh
         "This is a test highlight.",
         False,
     ]
-    expected = ("", "184-185", "Friday, 30 April 2021 12:31:29 AM", False)
+    expected = ("", "184-185", datetime(2021, 4, 30, 0, 31, 29), False)
 
     # When
     actual = _parse_page_location_date_and_note(raw_clipping_list)
@@ -236,7 +236,7 @@ def test_parse_page_location_date_and_note_should_parse_the_page_and_date_when_t
         "",
         "This is a test highlight.",
     ]
-    expected = ("3", "", "Friday, 30 April 2021 12:31:29 AM", False)
+    expected = ("3", "", datetime(2021, 4, 30, 0, 31, 29), False)
 
     # When
     actual = _parse_page_location_date_and_note(raw_clipping_list)

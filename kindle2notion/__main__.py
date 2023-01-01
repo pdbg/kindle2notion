@@ -51,7 +51,7 @@ def main(
         )
 
         with open("my_kindle_clippings.json", "w") as out_file:
-            json.dump(all_books, out_file, indent=4)
+            json.dump(all_books, out_file, indent=4, default=str)
 
         print("Transfer complete... Exiting script...")
     else:

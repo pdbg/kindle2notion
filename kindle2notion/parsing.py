@@ -141,7 +141,7 @@ def _parse_page_location_date_and_note(
             date = parse(
                 element[element.find("added on") :].replace("added on", "").strip()
             )
-            date = date.strftime("%A, %d %B %Y %I:%M:%S %p")
+            # date = date.strftime("%A, %d %B %Y %I:%M:%S %p")
 
     return page, location, date, is_note
 

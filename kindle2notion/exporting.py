@@ -1,5 +1,5 @@
-from datetime import datetime
-from typing import Dict, List, Tuple
+from datetime import date, datetime, timezone
+from typing import Dict, List, Tuple, Union
 
 import notional
 from notional.blocks import Paragraph, TextObject
@@ -28,7 +28,6 @@ def export_to_notion(
         each_book = all_books[title]
         author = each_book["author"]
         clippings = each_book["highlights"]
-        clippings_count = len(clippings)
         (
             formatted_clippings,
             last_date,
@@ -36,7 +35,6 @@ def export_to_notion(
         message = _add_book_to_notion(
             title,
             author,
-            clippings_count,
             formatted_clippings,
             last_date,
             notion_api_auth_token,
@@ -48,10 +46,11 @@ def export_to_notion(
 
 
 def _prepare_aggregated_text_for_one_book(
-    clippings: List, enable_highlight_date: bool
-) -> Tuple[str, str]:
+    clippings: list, enable_highlight_date: bool
+) -> Tuple[list[Tuple[str, datetime]], datetime | None]:
     # TODO: Special case for books with len(clippings) >= 100 characters. Character limit in a Paragraph block in Notion is 100
     formatted_clippings = []
+    last_date = None
     for each_clipping in clippings:
         aggregated_text = ""
         text = each_clipping[0]
@@ -67,11 +66,11 @@ def _prepare_aggregated_text_for_one_book(
             aggregated_text += "Page: " + page + ", "
         if location != "":
             aggregated_text += "Location: " + location
-        if enable_highlight_date and (date != ""):
-            aggregated_text += ", Date Added: " + date
+        if enable_highlight_date and (date):
+            aggregated_text += ", Date Added: " + date.strftime("%A, %d %B %Y %I:%M:%S %p")
 
-        aggregated_text = aggregated_text.strip() + "\n\n"
-        formatted_clippings.append(aggregated_text)
+        aggregated_text = aggregated_text.strip() + "\n"
+        formatted_clippings.append((aggregated_text, date))
         last_date = date
     return formatted_clippings, last_date
 
@@ -79,18 +78,20 @@ def _prepare_aggregated_text_for_one_book(
 def _add_book_to_notion(
     title: str,
     author: str,
-    clippings_count: int,
-    formatted_clippings: list,
-    last_date: str,
+    formatted_clippings: list[Tuple[str, datetime]],
+    last_date: datetime,
     notion_api_auth_token: str,
     notion_database_id: str,
     enable_book_cover: bool,
 ):
     notion = notional.connect(auth=notion_api_auth_token)
-    last_date = datetime.strptime(last_date, "%A, %d %B %Y %I:%M:%S %p")
+
+    title_and_author = title + " (" + str(author) + ")"
+    print(title_and_author)
+    print("-" * len(title_and_author))
 
     # Condition variables
-    title_exists = False
+    clippings_count = len(formatted_clippings)
     current_clippings_count = 0
 
     query = (
@@ -100,24 +101,8 @@ def _add_book_to_notion(
     )
     data = query.first()
 
-    if data:
-        title_exists = True
-        block_id = data.id
-        block = notion.pages.retrieve(block_id)
-        if block["Highlights"] == None:
-            block["Highlights"] = Number[0]
-        elif block["Highlights"] == clippings_count:  # if no change in clippings
-            title_and_author = str(block["Title"]) + " (" + str(block["Author"]) + ")"
-            print(title_and_author)
-            print("-" * len(title_and_author))
-            return "None to add.\n"
-
-    title_and_author = title + " (" + str(author) + ")"
-    print(title_and_author)
-    print("-" * len(title_and_author))
-
-    # Add a new book to the database
-    if not title_exists:
+    # Add a new book to the database if page doesn't exist
+    if not data or not data.id:
         new_page = notion.pages.create(
             parent=DatabaseRef(database_id=notion_database_id),
             properties={
@@ -130,8 +115,9 @@ def _add_book_to_notion(
             children=[],
         )
         # page_content = _update_book_with_clippings(formatted_clippings)
-        page_content = Paragraph["".join(formatted_clippings)]
-        notion.blocks.children.append(new_page, page_content)
+        page_content = [Paragraph[content] for content, _ in formatted_clippings]
+        # page_content = Paragraph["".join(formatted_clippings)]
+        notion.blocks.children.append(new_page, *page_content)
         block_id = new_page.id
         if enable_book_cover:
             # Fetch a book cover from Google Books if the cover for the page is not set
@@ -153,12 +139,27 @@ def _add_book_to_notion(
             notion.pages.set(new_page, cover=cover)
     else:
         # update a book that already exists in the database
-        page = notion.pages.retrieve(block_id)
+        page = notion.pages.retrieve(data.id)
+        if not page["Highlights"] or not page["Last Highlighted"]:
+            page["Highlights"] = Number[0]
+            page["Last Highlighted"] = Date[datetime(1970, 0, 0).isoformat()]
+
+        last_highlighted: Union[date, datetime] = page["Last Highlighted"].Start \
+            if page["Last Highlighted"] else datetime(1970, 0, 0, tzinfo=timezone.utc)
+        last_highlighted = last_highlighted.replace(tzinfo=None)
+        print(f"#### {last_highlighted}")
+        for _, date1 in formatted_clippings:
+            print(date1)
         # page_content = _update_book_with_clippings(formatted_clippings)
-        page_content = Paragraph["".join(formatted_clippings)]
-        notion.blocks.children.append(page, page_content)
+        page_content = [Paragraph[content] for content, date1 in formatted_clippings if date1 > last_highlighted]
+
+        if not page_content:
+            return "None to add. \n"
+
+        notion.blocks.children.append(page, *page_content)
         # TODO: Delete existing page children (or figure out how to find changes to be made by comparing it with local json file.)
         current_clippings_count = int(str(page["Highlights"]))
+        clippings_count = len(page_content)
         page["Highlights"] = Number[clippings_count]
         page["Last Highlighted"] = Date[last_date.isoformat()]
         page["Last Synced"] = Date[datetime.now().isoformat()]

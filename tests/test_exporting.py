@@ -1,3 +1,4 @@
+from datetime import datetime
 from kindle2notion.exporting import _prepare_aggregated_text_for_one_book
 
 
@@ -8,24 +9,25 @@ def test_prepare_aggregated_text_for_one_book_should_return_the_aggregated_text_
             "This is an example highlight.",
             "1",
             "100",
-            "Thursday, 29 April 2021 12:31:29 AM",
+            datetime(2021, 4, 29, 0, 31, 29),
             False,
         ),
         (
             "This is a second example highlight.",
             "2",
             "200",
-            "Friday, 30 April 2021 12:31:29 AM",
+            datetime(2021, 4, 29, 0, 31, 30),
             True,
         ),
     ]
 
     expected = (
         [
-            "This is an example highlight.\n* Page: 1, Location: 100\n\n",
-            "> NOTE: \nThis is a second example highlight.\n* Page: 2, Location: 200\n\n",
+            ("This is an example highlight.\n* Page: 1, Location: 100\n", datetime(2021, 4, 29, 0, 31, 29)),
+            ("> NOTE: \nThis is a second example highlight.\n* Page: 2, Location: 200\n",
+             datetime(2021, 4, 29, 0, 31, 30)),
         ],
-        "Friday, 30 April 2021 12:31:29 AM",
+        datetime(2021, 4, 29, 0, 31, 30),
     )
 
     # When
@@ -44,24 +46,26 @@ def test_prepare_aggregated_text_for_one_book_should_return_the_aggregated_text_
             "This is an example highlight.",
             "1",
             "100",
-            "Thursday, 29 April 2021 12:31:29 AM",
+            datetime(2021, 4, 29, 0, 31, 29),
             False,
         ),
         (
             "This is a second example highlight.",
             "2",
             "200",
-            "Friday, 30 April 2021 12:31:29 AM",
+            datetime(2021, 4, 30, 0, 31, 30),
             True,
         ),
     ]
 
     expected = (
         [
-            "This is an example highlight.\n* Page: 1, Location: 100, Date Added: Thursday, 29 April 2021 12:31:29 AM\n\n",
-            "> NOTE: \nThis is a second example highlight.\n* Page: 2, Location: 200, Date Added: Friday, 30 April 2021 12:31:29 AM\n\n",
+            ("This is an example highlight.\n* Page: 1, Location: 100, Date Added: Thursday, 29 April 2021 12:31:29 AM\n",
+             datetime(2021, 4, 29, 0, 31, 29)),
+            ("> NOTE: \nThis is a second example highlight.\n* Page: 2, Location: 200, Date Added: Friday, 30 April 2021 12:31:30 AM\n",
+             datetime(2021, 4, 30, 0, 31, 30)),
         ],
-        "Friday, 30 April 2021 12:31:29 AM",
+        datetime(2021, 4, 30, 0, 31, 30),
     )
 
     # When
