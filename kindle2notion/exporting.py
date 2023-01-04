@@ -70,6 +70,7 @@ def _prepare_aggregated_text_for_one_book(
             aggregated_text += ", Date Added: " + date.strftime("%A, %d %B %Y %I:%M:%S %p")
 
         aggregated_text = aggregated_text.strip() + "\n"
+        date = date.replace(second=0, microsecond=0)  # Notion stores minute level granularity
         formatted_clippings.append((aggregated_text, date))
         last_date = date
     return formatted_clippings, last_date
@@ -147,9 +148,7 @@ def _add_book_to_notion(
         last_highlighted: Union[date, datetime] = page["Last Highlighted"].Start \
             if page["Last Highlighted"] else datetime(1970, 0, 0, tzinfo=timezone.utc)
         last_highlighted = last_highlighted.replace(tzinfo=None)
-        print(f"#### {last_highlighted}")
-        for _, date1 in formatted_clippings:
-            print(date1)
+
         # page_content = _update_book_with_clippings(formatted_clippings)
         page_content = [Paragraph[content] for content, date1 in formatted_clippings if date1 > last_highlighted]
 

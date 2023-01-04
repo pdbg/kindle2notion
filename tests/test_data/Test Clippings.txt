@@ -28,18 +28,3 @@ Title 3 Is Clean (Robert C. Martin Series) (C., Martin Robert)
 
 This is test highlight 6.
 ==========
-Title 1: A Great Book (Horowitz, Ben)
-- Your Highlight on page 12 | Location 112-113 | Added on Wednesday, September 23, 2020 9:23:48 AM
-
-This is test highlight 7.
-==========
-Title 2 Is Good Too (Bryar, Colin)
-- Your Highlight on page 35 | Location 683-683 | Added on Friday, April 30, 2021 3:16:33 PM
-
-This is test highlight 8.
-==========
-Title 3 Is Clean (Robert C. Martin Series) (C., Martin Robert)
-- Your Highlight on page 23 | Location 565-564 | Added on Saturday, May 15, 2021 10:26:25 PM
-
-This is test highlight 9.
-==========
