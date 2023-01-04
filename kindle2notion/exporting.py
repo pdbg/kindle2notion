@@ -61,13 +61,13 @@ def _prepare_aggregated_text_for_one_book(
         if is_note == True:
             aggregated_text += "> " + "NOTE: \n"
 
-        aggregated_text += text + "\n* "
-        if page != "":
-            aggregated_text += "Page: " + page + ", "
-        if location != "":
-            aggregated_text += "Location: " + location
-        if enable_highlight_date and (date):
-            aggregated_text += ", Date Added: " + date.strftime("%A, %d %B %Y %I:%M:%S %p")
+        aggregated_text += text  # + "\n* "
+        # if page != "":
+        #     aggregated_text += "Page: " + page + ", "
+        # if location != "":
+        #     aggregated_text += "Location: " + location
+        # if enable_highlight_date and (date):
+        #     aggregated_text += ", Date Added: " + date.strftime("%A, %d %B %Y %I:%M:%S %p")
 
         aggregated_text = aggregated_text.strip() + "\n"
         date = date.replace(second=0, microsecond=0)  # Notion stores minute level granularity
