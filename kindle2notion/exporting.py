@@ -45,6 +45,12 @@ def export_to_notion(
             print("✓", message)
 
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
 def _prepare_aggregated_text_for_one_book(
     clippings: list, enable_highlight_date: bool
 ) -> Tuple[list[Tuple[str, datetime]], datetime | None]:
@@ -61,25 +67,21 @@ def _prepare_aggregated_text_for_one_book(
         if is_note == True:
             aggregated_text += "> " + "NOTE: \n"
 
-        aggregated_text += text  # + "\n* "
-        # if page != "":
-        #     aggregated_text += "Page: " + page + ", "
-        # if location != "":
-        #     aggregated_text += "Location: " + location
-        # if enable_highlight_date and (date):
-        #     aggregated_text += ", Date Added: " + date.strftime("%A, %d %B %Y %I:%M:%S %p")
-
-        aggregated_text = aggregated_text.strip() + "\n"
         date = date.replace(second=0, microsecond=0)  # Notion stores minute level granularity
-        formatted_clippings.append((aggregated_text, date))
+        for chunk in chunks(text, 2000):  ## https://developers.notion.com/reference/request-limits
+            aggregated_text += chunk  # + "\n* "
+            # if page != "":
+            #     aggregated_text += "Page: " + page + ", "
+            # if location != "":
+            #     aggregated_text += "Location: " + location
+            # if enable_highlight_date and (date):
+            #     aggregated_text += ", Date Added: " + date.strftime("%A, %d %B %Y %I:%M:%S %p")
+
+            aggregated_text = aggregated_text.strip() + "\n"
+            formatted_clippings.append((aggregated_text, date))
+
         last_date = date
     return formatted_clippings, last_date
-
-
-def chunks(lst, n):
-    """Yield successive n-sized chunks from lst."""
-    for i in range(0, len(lst), n):
-        yield lst[i:i + n]
 
 
 def _add_book_to_notion(

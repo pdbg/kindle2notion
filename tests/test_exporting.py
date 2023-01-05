@@ -60,9 +60,9 @@ def test_prepare_aggregated_text_for_one_book_should_return_the_aggregated_text_
 
     expected = (
         [
-            ("This is an example highlight.\n* Page: 1, Location: 100, Date Added: Thursday, 29 April 2021 12:31:29 AM\n",
+            ("This is an example highlight.\n* Page: 1, Location: 100, Date Added: Thursday, 29 April 2021 12:31:00 AM\n",
              datetime(2021, 4, 29, 0, 31, 0)),
-            ("> NOTE: \nThis is a second example highlight.\n* Page: 2, Location: 200, Date Added: Friday, 30 April 2021 12:31:30 AM\n",
+            ("> NOTE: \nThis is a second example highlight.\n* Page: 2, Location: 200, Date Added: Friday, 30 April 2021 12:31:00 AM\n",
              datetime(2021, 4, 30, 0, 31, 0)),
         ],
         datetime(2021, 4, 30, 0, 31, 0),
