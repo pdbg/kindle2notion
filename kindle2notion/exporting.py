@@ -157,19 +157,19 @@ def _add_book_to_notion(
 
         notion.blocks.children.append(page, *page_content)
         # TODO: Delete existing page children (or figure out how to find changes to be made by comparing it with local json file.)
-        current_clippings_count = int(str(page["Highlights"]))
+        current_clippings_count = int(float(str(page["Highlights"])))
         clippings_count = len(page_content)
-        page["Highlights"] = Number[clippings_count]
-        page["Last Highlighted"] = Date[last_date.isoformat()]
-        page["Last Synced"] = Date[datetime.now().isoformat()]
+
+        props = {
+            "Highlights": Number[clippings_count + current_clippings_count],
+            "Last Highlighted": Date[last_date.isoformat()],
+            "Last Synced": Date[datetime.now().isoformat()],
+        }
+
+        notion.pages.update(page, **props)
 
     # Logging the changes made
-    diff_count = (
-        clippings_count - current_clippings_count
-        if clippings_count > current_clippings_count
-        else clippings_count
-    )
-    message = str(diff_count) + " notes/highlights added successfully.\n"
+    message = str(clippings_count) + " notes/highlights added successfully.\n"
 
     return message
 
