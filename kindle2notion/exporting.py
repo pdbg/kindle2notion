@@ -76,6 +76,12 @@ def _prepare_aggregated_text_for_one_book(
     return formatted_clippings, last_date
 
 
+def chunks(lst, n):
+    """Yield successive n-sized chunks from lst."""
+    for i in range(0, len(lst), n):
+        yield lst[i:i + n]
+
+
 def _add_book_to_notion(
     title: str,
     author: str,
@@ -118,7 +124,8 @@ def _add_book_to_notion(
         # page_content = _update_book_with_clippings(formatted_clippings)
         page_content = [Paragraph[content] for content, _ in formatted_clippings]
         # page_content = Paragraph["".join(formatted_clippings)]
-        notion.blocks.children.append(new_page, *page_content)
+        for chunk in chunks(page_content, 100):
+            notion.blocks.children.append(new_page, *chunk)
         block_id = new_page.id
         if enable_book_cover:
             # Fetch a book cover from Google Books if the cover for the page is not set
@@ -155,7 +162,9 @@ def _add_book_to_notion(
         if not page_content:
             return "None to add. \n"
 
-        notion.blocks.children.append(page, *page_content)
+        for chunk in chunks(page_content, 100):
+            notion.blocks.children.append(page, *chunk)
+
         # TODO: Delete existing page children (or figure out how to find changes to be made by comparing it with local json file.)
         current_clippings_count = int(float(str(page["Highlights"])))
         clippings_count = len(page_content)
